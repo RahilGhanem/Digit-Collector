@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handwritten Digit Collector</title>
+    <title>Digit Drawing</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            background: #1a1a1a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,405 +22,102 @@
         }
 
         .container {
-            background: #ffffff;
+            background: #2a2a2a;
             border-radius: 16px;
             padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            max-width: 650px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
             width: 100%;
+            text-align: center;
         }
 
         h1 {
             text-align: center;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-            font-size: 32px;
+            color: #ff9500;
+            margin-bottom: 30px;
+            font-size: 28px;
             font-weight: 600;
-            letter-spacing: -0.5px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
+        .digit-prompt {
+            font-size: 120px;
+            font-weight: bold;
+            color: #ff9500;
             margin-bottom: 30px;
-            font-size: 14px;
-            font-weight: 400;
+            font-family: 'Arial Black', 'Arial', sans-serif;
+            letter-spacing: 10px;
         }
 
         .canvas-wrapper {
             display: flex;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         canvas {
-            border: 2px solid #e0e0e0;
+            border: 4px solid #ff9500;
             border-radius: 12px;
             cursor: crosshair;
             touch-action: none;
             background: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: border-color 0.3s ease;
-        }
-
-        canvas:hover {
-            border-color: #2a5298;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .control-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        select, input[type="text"], input[type="number"] {
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
-            flex: 1;
-            min-width: 150px;
-            transition: all 0.3s ease;
-            background: #fafafa;
-        }
-
-        select:focus, input[type="text"]:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: #2a5298;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
-        }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            opacity: 1;
-        }
-
-        .pen-size-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .pen-size-btn {
-            padding: 10px 18px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .pen-size-btn.active {
-            background: #2a5298;
-            color: white;
-            border-color: #2a5298;
-            box-shadow: 0 2px 8px rgba(42, 82, 152, 0.25);
-        }
-
-        .pen-size-btn:hover {
-            border-color: #2a5298;
-            transform: translateY(-1px);
-        }
-
-        .resize-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .resize-options {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .resize-btn {
-            padding: 8px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .resize-btn.active {
-            background: #1e3c72;
-            color: white;
-            border-color: #1e3c72;
-            box-shadow: 0 2px 6px rgba(30, 60, 114, 0.25);
-        }
-
-        .resize-btn:hover:not(:disabled) {
-            border-color: #1e3c72;
-            transform: translateY(-1px);
-        }
-
-        .resize-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            background: #f5f5f5;
+            box-shadow: 0 4px 20px rgba(255, 149, 0, 0.3);
         }
 
         .button-group {
             display: flex;
             gap: 15px;
+            justify-content: center;
             flex-wrap: wrap;
         }
 
         button {
-            padding: 14px 28px;
-            border: none;
+            padding: 14px 32px;
+            border: 2px solid #ff9500;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            flex: 1;
             min-width: 120px;
-            letter-spacing: 0.3px;
         }
 
         .clear-btn {
-            background: #dc3545;
-            color: white;
-            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+            background: transparent;
+            color: #ff9500;
         }
 
         .clear-btn:hover {
-            background: #c82333;
+            background: #ff9500;
+            color: #1a1a1a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
         }
 
-        .clear-btn:active {
-            transform: translateY(0);
+        .submit-btn {
+            background: #ff9500;
+            color: #1a1a1a;
         }
 
-        .save-btn {
-            background: #28a745;
-            color: white;
-            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
-        }
-
-        .save-btn:hover:not(:disabled) {
-            background: #218838;
+        .submit-btn:hover {
+            background: transparent;
+            color: #ff9500;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        .save-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .save-btn:disabled {
-            background: #9e9e9e;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-            opacity: 0.6;
-        }
-
-        .info {
-            text-align: center;
-            color: #555;
-            font-size: 13px;
-            margin-top: 20px;
-            padding: 12px 16px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #2a5298;
-            font-weight: 500;
-        }
-
-        .digit-buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-
-        .digit-btn {
-            padding: 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .digit-btn.active {
-            background: #2a5298;
-            color: white;
-            border-color: #2a5298;
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
-        }
-
-        .digit-btn:hover {
-            border-color: #2a5298;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 24px;
-            }
-
-            h1 {
-                font-size: 26px;
-            }
-
-            .subtitle {
-                font-size: 13px;
-            }
-
-            canvas {
-                width: 100% !important;
-                height: auto !important;
-            }
-
-            .digit-buttons {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 8px;
-            }
-
-            button {
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-
-            label {
-                font-size: 13px;
-            }
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Handwritten Digit Collector</h1>
-        <p class="subtitle">Machine Learning Dataset Collection Tool</p>
+        <h1>Draw the Digit</h1>
+        <div class="digit-prompt" id="digitPrompt">0</div>
 
         <div class="canvas-wrapper">
             <canvas id="canvas" width="400" height="400"></canvas>
         </div>
 
-        <div class="controls">
-            <!-- Team Member Selection -->
-            <div class="control-group">
-                <label>Team Member</label>
-                <select id="teamMember">
-                    <option value="">Select team member...</option>
-                    <option value="member1">Haddad Imane</option>
-                    <option value="member2">Ghanem Rahil</option>
-                    <option value="member3">Roumili Amira</option>
-                    <option value="member4">Bourouba Faiza</option>
-                    <option value="member5">Bouallag Hadjer</option>
-                </select>
-            </div>
-
-            <!-- Participant Number -->
-            <div class="control-group">
-                <label>Participant Number</label>
-                <input type="number" id="participantNumber" min="1" value="1" placeholder="e.g., 1, 2, 3...">
-            </div>
-
-            <!-- Digit Selection -->
-            <div class="control-group">
-                <label>Select Digit (0-9)</label>
-                <div class="digit-buttons">
-                    <button class="digit-btn" data-digit="0">0</button>
-                    <button class="digit-btn" data-digit="1">1</button>
-                    <button class="digit-btn" data-digit="2">2</button>
-                    <button class="digit-btn" data-digit="3">3</button>
-                    <button class="digit-btn" data-digit="4">4</button>
-                    <button class="digit-btn" data-digit="5">5</button>
-                    <button class="digit-btn" data-digit="6">6</button>
-                    <button class="digit-btn" data-digit="7">7</button>
-                    <button class="digit-btn" data-digit="8">8</button>
-                    <button class="digit-btn" data-digit="9">9</button>
-                </div>
-            </div>
-
-            <!-- Pen Size -->
-            <div class="control-group">
-                <label>Pen Size</label>
-                <div class="pen-size-group">
-                    <button class="pen-size-btn" data-size="2">Small</button>
-                    <button class="pen-size-btn active" data-size="5">Medium</button>
-                    <button class="pen-size-btn" data-size="10">Large</button>
-                    <button class="pen-size-btn" data-size="15">XL</button>
-                </div>
-            </div>
-
-            <!-- Resize Options -->
-            <div class="control-group">
-                <label>Output Size</label>
-                <div class="resize-group">
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="resizeToggle">
-                        <label for="resizeToggle" style="font-weight: normal;">Enable Resize</label>
-                    </div>
-                    <div class="resize-options">
-                        <button class="resize-btn active" data-size="28" disabled>28×28</button>
-                        <button class="resize-btn" data-size="128" disabled>128×128</button>
-                        <button class="resize-btn" data-size="full" disabled>Full Res</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="button-group">
-                <button class="clear-btn" id="clearBtn">Clear Canvas</button>
-                <button class="save-btn" id="saveBtn" disabled>Save PNG</button>
-            </div>
-
-            <div class="info" id="info">
-                Select a digit and start drawing!
-            </div>
+        <div class="button-group">
+            <button class="clear-btn" id="clearBtn">Clear</button>
+            <button class="submit-btn" id="submitBtn">Submit</button>
         </div>
     </div>
 
@@ -428,52 +125,123 @@
         // Canvas setup
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        
+
+        // Server configuration
+        const SERVER_URL = 'http://localhost:3000';
+
         // State
         let isDrawing = false;
-        let penSize = 5;
-        let selectedDigit = null;
-        let resizeEnabled = false;
-        let resizeSize = 28;
         let hasDrawn = false;
-        let selectedTeamMember = null;
-        
-        // Initialize canvas with white background
+        let currentDigit = 0;
+        let penSize = 5;
+        const sessionId = 'participant_' + Math.random().toString(36).substr(2, 9);
+
+        // Sound effects
+        function playSound(type) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = audioCtx.currentTime;
+                
+                if (type === 'clear') {
+                    // Clear sound - ascending beep
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'draw') {
+                    // Draw sound - short tick
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(800, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'submit') {
+                    // Submit sound - success melody
+                    const notes = [523, 659, 784]; // C5, E5, G5
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.frequency.setValueAtTime(freq, now);
+                        gain.gain.setValueAtTime(0.2, now + idx * 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0, now + idx * 0.1 + 0.15);
+                        osc.start(now + idx * 0.1);
+                        osc.stop(now + idx * 0.1 + 0.15);
+                    });
+                } else if (type === 'click') {
+                    // Click sound - short beep
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(600, now);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                }
+            } catch (e) {
+                // Ignore audio context errors
+            }
+        }
+
+        // Initialize canvas with black background
         function initCanvas() {
-            ctx.fillStyle = 'white';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = 'white';
             ctx.lineWidth = penSize;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
         }
-        
+
         initCanvas();
-        
+
+        // Show a new random digit
+        function showNewDigit() {
+            currentDigit = Math.floor(Math.random() * 10);
+            document.getElementById('digitPrompt').textContent = currentDigit;
+            
+            // Randomly change pen size (between 2 and 12)
+            const sizes = [2, 3, 4, 5, 6, 8, 10, 12];
+            penSize = sizes[Math.floor(Math.random() * sizes.length)];
+            
+            initCanvas();
+            hasDrawn = false;
+        }
+
         // Drawing functions
         function startDrawing(e) {
             isDrawing = true;
             hasDrawn = true;
-            updateSaveButton();
+            playSound('draw');
             draw(e);
         }
-        
+
         function stopDrawing() {
             isDrawing = false;
             ctx.beginPath();
         }
-        
+
         function draw(e) {
             if (!isDrawing) return;
-            
             e.preventDefault();
-            
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            
             let clientX, clientY;
-            
             if (e.type.includes('touch')) {
                 clientX = e.touches[0].clientX;
                 clientY = e.touches[0].clientY;
@@ -481,177 +249,66 @@
                 clientX = e.clientX;
                 clientY = e.clientY;
             }
-            
             const x = (clientX - rect.left) * scaleX;
             const y = (clientY - rect.top) * scaleY;
-            
             ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(x, y);
         }
-        
-        // Mouse events
+
+        // Mouse & touch events
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
+        window.addEventListener('mouseup', stopDrawing);
         canvas.addEventListener('mouseout', stopDrawing);
-        
-        // Touch events
         canvas.addEventListener('touchstart', startDrawing);
         canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDrawing);
-        
-        // Team member selection
-        const teamMemberSelect = document.getElementById('teamMember');
-        teamMemberSelect.addEventListener('change', (e) => {
-            selectedTeamMember = e.target.value;
-            updateSaveButton();
-            updateInfo();
-        });
+        window.addEventListener('touchend', stopDrawing);
 
-        // Participant number change
-        const participantNumberInput = document.getElementById('participantNumber');
-        participantNumberInput.addEventListener('input', () => {
-            updateInfo();
-        });
-        
-        // Digit selection
-        const digitButtons = document.querySelectorAll('.digit-btn');
-        digitButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                digitButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedDigit = btn.dataset.digit;
-                updateSaveButton();
-                updateInfo();
-            });
-        });
-        
-        // Pen size
-        const penSizeButtons = document.querySelectorAll('.pen-size-btn');
-        penSizeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                penSizeButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                penSize = parseInt(btn.dataset.size);
-                ctx.lineWidth = penSize;
-            });
-        });
-        
-        // Resize toggle
-        const resizeToggle = document.getElementById('resizeToggle');
-        const resizeButtons = document.querySelectorAll('.resize-btn');
-        
-        resizeToggle.addEventListener('change', (e) => {
-            resizeEnabled = e.target.checked;
-            resizeButtons.forEach(btn => btn.disabled = !resizeEnabled);
-            updateInfo();
-        });
-        
-        resizeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                resizeButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                resizeSize = btn.dataset.size;
-                updateInfo();
-            });
-        });
-        
-        // Clear button
+        // Button handlers
         document.getElementById('clearBtn').addEventListener('click', () => {
+            playSound('clear');
             initCanvas();
             hasDrawn = false;
-            updateSaveButton();
-            updateInfo();
         });
-        
-        // Save button
-        document.getElementById('saveBtn').addEventListener('click', () => {
-            const teamMember = selectedTeamMember;
-            const participantNum = document.getElementById('participantNumber').value;
-            const participantId = `${teamMember}_p${String(participantNum).padStart(2, '0')}`;
-            const filename = `${participantId}_digit_${selectedDigit}.png`;
-            
-            let finalCanvas = canvas;
-            
-            // Create a temporary canvas if resizing is needed
-            if (resizeEnabled && resizeSize !== 'full') {
-                const size = parseInt(resizeSize);
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = size;
-                tempCanvas.height = size;
-                const tempCtx = tempCanvas.getContext('2d');
-                
-                // Fill with white background
-                tempCtx.fillStyle = 'white';
-                tempCtx.fillRect(0, 0, size, size);
-                
-                // Draw resized image
-                tempCtx.drawImage(canvas, 0, 0, size, size);
-                finalCanvas = tempCanvas;
-            }
-            
-            // Convert to blob and download
-            finalCanvas.toBlob((blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                // Show success message
-                const info = document.getElementById('info');
-                info.textContent = `Successfully saved: ${filename}`;
-                info.style.background = '#d4edda';
-                info.style.color = '#155724';
-                info.style.borderLeftColor = '#28a745';
-                
-                setTimeout(() => {
-                    info.style.background = '#f8f9fa';
-                    info.style.color = '#555';
-                    info.style.borderLeftColor = '#2a5298';
-                    updateInfo();
-                }, 3000);
-            }, 'image/png');
-        });
-        
-        // Update save button state
-        function updateSaveButton() {
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = !(selectedTeamMember && selectedDigit !== null && hasDrawn);
-        }
-        
-        // Update info text
-        function updateInfo() {
-            const info = document.getElementById('info');
-            
-            if (!selectedTeamMember) {
-                info.textContent = 'Select your team member to begin';
+
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            if (!hasDrawn) {
+                alert('Please draw something before submitting!');
                 return;
             }
-            
-            const participantNum = document.getElementById('participantNumber').value;
-            const participantId = `${selectedTeamMember}_p${String(participantNum).padStart(2, '0')}`;
-            
-            if (selectedDigit === null) {
-                info.textContent = 'Select a digit to begin drawing';
-            } else if (!hasDrawn) {
-                info.textContent = `Draw digit ${selectedDigit} on the canvas`;
-            } else {
-                let sizeText = 'full resolution';
-                if (resizeEnabled && resizeSize !== 'full') {
-                    sizeText = `${resizeSize}×${resizeSize}`;
+
+            playSound('click');
+
+            const filename = `${sessionId}_digit_${currentDigit}_${Date.now()}.png`;
+
+            canvas.toBlob(async (blob) => {
+                const fd = new FormData();
+                fd.append('image', blob, filename);
+                fd.append('participantId', sessionId);
+                fd.append('digit', currentDigit);
+                fd.append('scoreDelta', 1);
+
+                try {
+                    const res = await fetch(SERVER_URL + '/upload', { method: 'POST', body: fd });
+                    if (res.ok) {
+                        playSound('submit');
+                        console.log('Image uploaded successfully');
+                    }
+                } catch (err) {
+                    console.log('Server unreachable, but drawing saved locally');
                 }
-                info.textContent = `Ready to save as: ${participantId}_digit_${selectedDigit}.png (${sizeText})`;
-            }
-        }
-        
-        // Initialize info
-        updateInfo();
+
+                // Show next digit after a short delay
+                setTimeout(() => {
+                    showNewDigit();
+                }, 500);
+            }, 'image/png');
+        });
+
+        // Initialize with first digit
+        showNewDigit();
     </script>
 </body>
 </html>
